@@ -16,8 +16,8 @@ export class BaseCtl implements OnInit {
         searchParams: {}, //search form
         preload: [], // preload data
         list: [], // search list 
-        pageNo: 0,
-        nextListSize: 0
+        nextListSize: 0,
+        pageNo: 0
     };
 
     public api: any = {
@@ -52,7 +52,7 @@ export class BaseCtl implements OnInit {
         var _self = this;
         this.serviceLocator.httpService.get(_self.api.preload, function (res: any) {
             if (res.success) {
-                _self.form.preload = res.result.roleList;
+                _self.form.preload = res.result;
             } else {
                 _self.form.error = true;
                 _self.form.message = res.result.message;
@@ -73,6 +73,24 @@ export class BaseCtl implements OnInit {
                 if (res.result.inputerror) {
                     _self.form.inputerror = res.result.inputerror;
                 }
+                _self.form.message = res.result.message;
+            }
+        });
+    }
+
+    search() {
+        var _self = this;
+        console.log("Calling API with pageNo ===============", this.form.pageNo);
+
+        this.serviceLocator.httpService.post(_self.api.search, _self.form, function (res: any) {
+            _self.form.message = '';
+            _self.form.list = [];
+            if (res.success) {
+                _self.form.error = false;
+                _self.form.list = res.result.data;
+                _self.form.nextListSize = res.result.nextListSize;
+            } else {
+                _self.form.error = true;
                 _self.form.message = res.result.message;
             }
         });

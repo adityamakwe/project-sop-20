@@ -13,6 +13,24 @@ import { FooterComponent } from './footer/footer.component';
 import { UserComponent } from './user/user.component'
 import { EndpointServiceService } from './endpoint-service.service';
 import { ServiceLocatorService } from './service-locator.service';
+import { RoleComponent } from './role/role.component';
+import { CollegeComponent } from './college/college.component';
+import { CourseComponent } from './course/course.component';
+import { SubjectComponent } from './subject/subject.component';
+import { MarksheetComponent } from './marksheet/marksheet.component';
+import { TimetableComponent } from './timetable/timetable.component';
+import { FacultyComponent } from './faculty/faculty.component';
+import { StudentComponent } from './student/student.component';
+import { UserListComponent } from './user/user-list.component';
+import { RoleListComponent } from './role/role-list.component';
+import { CollegeListComponent } from './college/college-list.component';
+import { CourseListComponent } from './course/course-list.component';
+import { SubjectListComponent } from './subject/subject-list.component';
+import { FacultyListComponent } from './faculty/faculty-list.component';
+import { MarksheetListComponent } from './marksheet/marksheet-list.component';
+import { StudentListComponent } from './student/student-list.component';
+import { TimetableListComponent } from './timetable/timetable-list.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -21,7 +39,25 @@ import { ServiceLocatorService } from './service-locator.service';
     SignupComponent,
     NavbarComponent,
     FooterComponent,
-    UserComponent
+    UserComponent,
+    RoleComponent,
+    CollegeComponent,
+    CourseComponent,
+    SubjectComponent,
+    MarksheetComponent,
+    TimetableComponent,
+    FacultyComponent,
+    StudentComponent,
+    UserListComponent,
+    RoleListComponent,
+    CollegeListComponent,
+    CourseListComponent,
+    SubjectListComponent,
+    FacultyListComponent,
+    MarksheetListComponent,
+    StudentListComponent,
+    TimetableListComponent,
+    
   ],
   imports: [
     BrowserModule,

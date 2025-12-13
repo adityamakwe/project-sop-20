@@ -69,7 +69,7 @@
             <td>
                 <select name="roleId" [(ngModel)]="form.data.roleId" style="width: 170px;">
                     <option value="undefined">------------Select------------</option>
-                    <option *ngFor="let obj of form.preload" [value]="obj.id">{{obj.name}}</option>
+                    <option *ngFor="let obj of form.preload.roleList" [value]="obj.id">{{obj.name}}</option>
                 </select>
             </td>
             <td style="position: fixed; color: red;">{{form.inputerror.roleId}}</td>
