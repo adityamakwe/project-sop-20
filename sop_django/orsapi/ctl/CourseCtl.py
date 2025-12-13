@@ -11,10 +11,10 @@ from ..service.CourseService import CourseService
 class CourseCtl(BaseCtl):
 
     def request_to_form(self, requestForm):
-        self.form['id'] = requestForm['id']
-        self.form['name'] = requestForm['name']
-        self.form['description'] = requestForm['description']
-        self.form['duration'] = requestForm['duration']
+        self.form['id'] = requestForm.get('id')
+        self.form['name'] = requestForm.get('name')
+        self.form['description'] = requestForm.get('description')
+        self.form['duration'] = requestForm.get('duration')
 
     def form_to_model(self, obj):
         pk = int(self.form['id'])
@@ -75,25 +75,25 @@ class CourseCtl(BaseCtl):
                 duplicate = self.get_service().get_model().objects.exclude(id=pk).filter(name=self.form['name'])
                 if duplicate.count() > 0:
                     res["success"] = False
-                    res["result"]["inputerror"] = "Course Name already exists"
+                    res["result"]["message"] = "Course Name already exists"
                 else:
                     r = self.form_to_model(Course())
                     self.get_service().save(r)
                     self.form['id'] = r.id
                     res["success"] = True
-                    res["result"]["inputerror"] = "Course updated successfully"
+                    res["result"]["message"] = "Course updated successfully"
                 return JsonResponse(res)
             else:
                 duplicate = self.get_service().get_model().objects.filter(name=self.form['name'])
                 if duplicate.count() > 0:
                     res["success"] = False
-                    res["result"]["inputerror"] = "Course Name already exists"
+                    res["result"]["message"] = "Course Name already exists"
                 else:
                     course = self.form_to_model(Course())
                     self.get_service().save(course)
                     res["success"] = True
-                    res["result"]["inputerror"] = "Course added successfully"
-            return JsonResponse(res)
+                    res["result"]["message"] = "Course added successfully"
+        return JsonResponse(res)
 
     def search(self, request, params={}):
         json_request = json.loads(request.body)

@@ -7,7 +7,7 @@ from django.db import connection
 class SubjectService(BaseService):
 
     def search(self, params):
-        pageNo = (params['pageNo'] - 1) * self.pageSize
+        pageNo = (params['pageNo']) * self.pageSize
         sql = "select * from sos_subject where 1=1"
         val = params.get("name", None)
         if (DataValidator.isNotNull(val)):

@@ -155,7 +155,7 @@ class Faculty(models.Model):
 
 class Marksheet(models.Model):
     rollNumber = models.CharField(max_length=50)
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=100)
     physics = models.IntegerField()
     chemistry = models.IntegerField()
     maths = models.IntegerField()

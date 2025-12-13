@@ -7,12 +7,13 @@ from django.db import connection
 class MarksheetService(BaseService):
 
     def search(self, params):
-        pageNo = (params["pageNo"] - 1) * self.pageSize
+        pageNo = (params["pageNo"]) * self.pageSize
         sql = "select * from sos_marksheet where 1=1"
-        val = params.get("rollNumber", None)
+        val = params.get("name", None)
         if DataValidator.isNotNull(val):
-            sql += " and rollNumber = '" + val + "'"
+            sql += " and name like '" + val + "%%'"
         sql += " limit %s, %s"
+        print('---------^^^^^^',sql)
         cursor = connection.cursor()
         cursor.execute(sql, [pageNo, self.pageSize])
         result = cursor.fetchall()

@@ -13,23 +13,23 @@ from ..service.SubjectService import SubjectService
 
 class FacultyCtl(BaseCtl):
 
-    def preload(self, request, params={}):
-        self.college_List = CollegeService().preload()
-        self.course_List = CourseService().preload()
-        self.subject_List = SubjectService().preload()
+    # def preload(self, request, params={}):
+    #     self.college_List = CollegeService().preload()
+    #     self.course_List = CourseService().preload()
+    #     self.subject_List = SubjectService().preload()
 
     def request_to_form(self, requestForm):
-        self.form['id'] = requestForm['id']
-        self.form['firstName'] = requestForm['firstName']
-        self.form['lastName'] = requestForm['lastName']
-        self.form['email'] = requestForm['email']
-        self.form['password'] = requestForm['password']
-        self.form['address'] = requestForm['address']
-        self.form['gender'] = requestForm['gender']
-        self.form['dob'] = requestForm['dob']
-        self.form['collegeId'] = requestForm['collegeId']
-        self.form['courseId'] = requestForm['courseId']
-        self.form['subjectId'] = requestForm['subjectId']
+        self.form['id'] = requestForm.get('id','')
+        self.form['firstName'] = requestForm.get('firstName','')
+        self.form['lastName'] = requestForm.get('lastName','')
+        self.form['email'] = requestForm.get('email','')
+        self.form['password'] = requestForm.get('password','')
+        self.form['address'] = requestForm.get('address','')
+        self.form['gender'] = requestForm.get('gender','')
+        self.form['dob'] = requestForm.get('dob','')
+        self.form['collegeId'] = requestForm.get('collegeId','')
+        self.form['courseId'] = requestForm.get('courseId','')
+        self.form['subjectId'] = requestForm.get('subjectId','')
 
         if self.form['collegeId'] != '':
             college = CollegeService().get(self.form['collegeId'])
@@ -195,7 +195,8 @@ class FacultyCtl(BaseCtl):
         json_request = json.loads(request.body)
         res = {"result": {}, "success": True}
         if (json_request):
-            params["name"] = json_request.get("name", None)
+            params["firstName"] = json_request.get("firstName", None)
+            params["email"] = json_request.get("email", None)
             params["pageNo"] = json_request.get("pageNo", None)
         records = self.get_service().search(params)
         if records and records.get("data"):
@@ -229,6 +230,28 @@ class FacultyCtl(BaseCtl):
         else:
             res["success"] = False
             res["result"]["message"] = "Data was not deleted"
+        return JsonResponse(res)
+
+    def preload(self, request, params={}):
+        res = {"result": {}, "success": True}
+        college_list = CollegeService().preload()
+        course_list = CourseService().preload()
+        subject_list = SubjectService().preload()
+        preloadList = []
+        preloadList1 = []
+        preloadList2 = []
+        for x in college_list:
+            preloadList.append(x.to_json())
+        res["result"]["collegeList"] = preloadList
+
+        for x in course_list:
+            preloadList1.append(x.to_json())
+        res["result"]["courseList"] = preloadList1
+
+        for x in subject_list:
+            preloadList2.append(x.to_json())
+        res["result"]["subjectList"] = preloadList2
+
         return JsonResponse(res)
 
     def get_service(self):

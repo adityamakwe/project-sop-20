@@ -1,7 +1,5 @@
 import json
-
 from django.http import JsonResponse
-
 from ..service.CollegeService import CollegeService
 from .BaseCtl import BaseCtl
 from django.shortcuts import render
@@ -16,13 +14,13 @@ class StudentCtl(BaseCtl):
         self.dynamic_preload = CollegeService().preload()
 
     def request_to_form(self, requestForm):
-        self.form['id'] = requestForm['id']
-        self.form['firstName'] = requestForm['firstName']
-        self.form['lastName'] = requestForm['lastName']
-        self.form['dob'] = requestForm['dob']
-        self.form['mobileNumber'] = requestForm['mobileNumber']
-        self.form['email'] = requestForm['email']
-        self.form['collegeId'] = requestForm['collegeId']
+        self.form['id'] = requestForm.get('id','')
+        self.form['firstName'] = requestForm.get('firstName','')
+        self.form['lastName'] = requestForm.get('lastName','')
+        self.form['dob'] = requestForm.get('dob','')
+        self.form['mobileNumber'] = requestForm.get('mobileNumber','')
+        self.form['email'] = requestForm.get('email','')
+        self.form['collegeId'] = requestForm.get('collegeId','')
 
         if self.form['collegeId'] != '':
             college = CollegeService().get(self.form['collegeId'])
@@ -124,30 +122,31 @@ class StudentCtl(BaseCtl):
                 duplicate = self.get_service().get_model().objects.exclude(id=pk).filter(email=self.form['email'])
                 if duplicate.count() > 0:
                     res["success"] = False
-                    res["result"]["inputerror"] = "Email already exists"
+                    res["result"]["message"] = "Email already exists"
                 else:
                     student = self.form_to_model(Student())
                     self.get_service().save(student)
                     self.form['id'] = student.id
                     res["success"] = True
-                    res["result"]["inputerror"] = "Student updated successfully"
+                    res["result"]["message"] = "Student updated successfully"
             else:
                 duplicate = self.get_service().get_model().objects.filter(email=self.form['email'])
                 if duplicate.count() > 0:
                     res["success"] = False
-                    res["result"]["inputerror"] = "Email already exists"
+                    res["result"]["message"] = "Email already exists"
                 else:
                     student = self.form_to_model(Student())
                     self.get_service().save(student)
                     res["success"] = True
-                    res["result"]["inputerror"] = "Student added successfully"
-            return JsonResponse(res)
+                    res["result"]["message"] = "Student added successfully"
+        return JsonResponse(res)
 
     def search(self, request, params={}):
         json_request = json.loads(request.body)
         res = {"result": {}, "success": True}
         if (json_request):
-            params["name"] = json_request.get("name", None)
+            params["firstName"] = json_request.get("firstName", None)
+            params["collegeName"] = json_request.get("collegeName", None)
             params["pageNo"] = json_request.get("pageNo", None)
         records = self.get_service().search(params)
         if records and records.get("data"):
@@ -183,6 +182,14 @@ class StudentCtl(BaseCtl):
             res["result"]["message"] = "Data was not deleted"
         return JsonResponse(res)
 
+    def preload(self, request, params={}):
+        res = {"result": {}, "success": True}
+        college_list = CollegeService().preload()
+        preloadList = []
+        for x in college_list:
+            preloadList.append(x.to_json())
+        res["result"]["collegeList"] = preloadList
+        return JsonResponse(res)
 
     def get_service(self):
         return StudentService()

@@ -24,19 +24,21 @@ class UserService(BaseService):
             return None
 
     def search(self, params):
-        pageNo = ((params["pageNo"] - 1) * self.pageSize)
+        pageNo = ((params["pageNo"]) * self.pageSize)
         sql = "select * from sos_user where 1=1"
         val = params.get("firstName", None)
-        val2 = params.get("dob",None)
+        val2 = params.get("loginId",None)
         val3 = params.get("roleId", None)
+        print('=================',val3)
         if DataValidator.isNotNull(val):
             sql += " and firstName like '" + val + "%%'"
         if DataValidator.isNotNull(val2):
-            sql += "and dob = '" + val2 + "%%'"
+            sql += " and loginId like '" + val2 + "%%'"
         if DataValidator.isNotNull(val3):
-            sql += "and roleId = '" + val3 + "%%'"
+            sql += " and roleId = " + val3
 
         sql += " limit %s, %s"
+        print(sql)
         cursor = connection.cursor()
         cursor.execute(sql, [pageNo, self.pageSize])
         result = cursor.fetchall()

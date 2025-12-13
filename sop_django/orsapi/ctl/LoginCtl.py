@@ -8,8 +8,8 @@ from ..utility.DataValidator import DataValidator
 class LoginCtl(BaseCtl):
 
     def request_to_form(self, requestForm):
-        self.form["loginId"] = requestForm["loginId"]
-        self.form["password"] = requestForm["password"]
+        self.form['loginId'] = requestForm.get('loginId', '')
+        self.form['password'] = requestForm.get('password', '')
 
     def input_validation(self):
         super().input_validation()

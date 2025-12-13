@@ -11,12 +11,12 @@ from ..service.CollegeService import CollegeService
 class CollegeCtl(BaseCtl):
 
     def request_to_form(self, requestForm):
-        self.form['id'] = requestForm['id']
-        self.form['name'] = requestForm['name']
-        self.form['address'] = requestForm['address']
-        self.form['state'] = requestForm['state']
-        self.form['city'] = requestForm['city']
-        self.form['phoneNumber'] = requestForm['phoneNumber']
+        self.form['id'] = requestForm.get('id')
+        self.form['name'] = requestForm.get('name')
+        self.form['address'] = requestForm.get('address')
+        self.form['state'] = requestForm.get('state')
+        self.form['city'] = requestForm.get('city')
+        self.form['phoneNumber'] = requestForm.get('phoneNumber')
 
     def form_to_model(self, obj):
         pk = int(self.form['id'])

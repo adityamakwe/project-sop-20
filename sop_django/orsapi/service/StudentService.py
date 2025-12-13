@@ -7,11 +7,14 @@ from django.db import connection
 class StudentService(BaseService):
 
     def search(self, params):
-        pageNo = (params['pageNo'] - 1) * self.pageSize
+        pageNo = (params['pageNo']) * self.pageSize
         sql = "select * from sos_student where 1=1"
         val = params.get('firstName', None)
+        val2 = params.get('collegeName', None)
         if (DataValidator.isNotNull(val)):
             sql += " and firstName like '" + val + "%%'"
+        if DataValidator.isNotNull(val2):
+            sql += " and collegeName like '" + val2 + "%%'"
         sql += " limit %s, %s"
         cursor = connection.cursor()
         cursor.execute(sql, [pageNo, self.pageSize])

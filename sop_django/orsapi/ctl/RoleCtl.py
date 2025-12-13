@@ -11,9 +11,9 @@ from ..service.RoleService import RoleService
 class RoleCtl(BaseCtl):
 
     def request_to_form(self, requestForm):
-        self.form['id'] = requestForm['id']
-        self.form['name'] = requestForm['name']
-        self.form['description'] = requestForm['description']
+        self.form['id'] = requestForm.get('id','')
+        self.form['name'] = requestForm.get('name','')
+        self.form['description'] = requestForm.get('description','')
 
     def form_to_model(self, obj):
         pk = int(self.form['id'])
@@ -61,7 +61,7 @@ class RoleCtl(BaseCtl):
         res = {"result": {}, "success": True}
         if (self.input_validation()):
             res["success"] = False
-            res["result"]["message"] = ""
+            res["result"]["inputerror"] = self.form["inputError"]
         else:
             if (int(self.form['id']) > 0):
                 pk = int(self.form['id'])
@@ -91,7 +91,7 @@ class RoleCtl(BaseCtl):
         json_request = json.loads(request.body)
         res = {"result": {}, "success": True}
         if (json_request):
-            params["name"] = json_request.get("name", None)
+            params["id"] = json_request.get("id", None)
             params["pageNo"] = json_request.get("pageNo", None)
         records = self.get_service().search(params)
         if records and records.get("data"):
@@ -125,6 +125,15 @@ class RoleCtl(BaseCtl):
         else:
             res["success"] = False
             res["result"]["message"] = "Data was not deleted"
+        return JsonResponse(res)
+
+    def preload(self, request, params={}):
+        res = {"result": {}, "success": True}
+        role_list = RoleService().preload()
+        preloadList = []
+        for x in role_list:
+            preloadList.append(x.to_json())
+        res["result"]["roleList"] = preloadList
         return JsonResponse(res)
 
     def get_service(self):

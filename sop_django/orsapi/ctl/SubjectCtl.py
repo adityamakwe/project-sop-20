@@ -11,14 +11,14 @@ from ..service.CourseService import CourseService
 
 class SubjectCtl(BaseCtl):
 
-    def preload(self, request, params={}):
-        self.dynamic_preload = CourseService().preload()
+    # def preload(self, request, params={}):
+    #     self.dynamic_preload = CourseService().preload()
 
     def request_to_form(self, requestForm):
-        self.form['id'] = requestForm['id']
-        self.form['name'] = requestForm['name']
-        self.form['description'] = requestForm['description']
-        self.form['courseId'] = requestForm['courseId']
+        self.form['id'] = requestForm.get('id','')
+        self.form['name'] = requestForm.get('name','')
+        self.form['description'] = requestForm.get('description','')
+        self.form['courseId'] = requestForm.get('courseId','')
         if self.form['courseId'] != '':
             course = CourseService().get(self.form['courseId'])
             self.form["courseName"] = course.name
@@ -86,23 +86,23 @@ class SubjectCtl(BaseCtl):
                 duplicate = self.get_service().get_model().objects.exclude(id=pk).filter(name=self.form['name'])
                 if duplicate.count() > 0:
                     res["success"] = False
-                    res["result"]["inputerror"] = "Subject Name already exists"
+                    res["result"]["message"] = "Subject Name already exists"
                 else:
                     subject = self.form_to_model(Subject())
                     self.get_service().save(subject)
                     self.form['id'] = subject.id
                     res["success"] = True
-                    res["result"]["inputerror"] = "Subject updated successfully"
+                    res["result"]["message"] = "Subject updated successfully"
             else:
                 duplicate = self.get_service().get_model().objects.filter(name=self.form['name'])
                 if duplicate.count() > 0:
                     res["success"] = False
-                    res["result"]["inputerror"] = "Subject Name already exists"
+                    res["result"]["message"] = "Subject Name already exists"
                 else:
                     subject = self.form_to_model(Subject())
                     self.get_service().save(subject)
                     res["success"] = True
-                    res["result"]["inputerror"] = "Subject added successfully"
+                    res["result"]["message"] = "Subject added successfully"
         return JsonResponse(res)
 
     def search(self, request, params={}):
@@ -143,6 +143,15 @@ class SubjectCtl(BaseCtl):
         else:
             res["success"] = False
             res["result"]["message"] = "Data was not deleted"
+        return JsonResponse(res)
+
+    def preload(self, request, params={}):
+        res = {"result": {}, "success": True}
+        course_list = CourseService().preload()
+        preloadList = []
+        for x in course_list:
+            preloadList.append(x.to_json())
+        res["result"]["courseList"] = preloadList
         return JsonResponse(res)
 
     def get_service(self):

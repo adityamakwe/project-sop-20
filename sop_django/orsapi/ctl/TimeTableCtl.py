@@ -13,17 +13,17 @@ from ..service.TimeTableService import TimeTableService
 
 class TimeTableCtl(BaseCtl):
 
-    def preload(self, request, params={}):
-        self.course_List = CourseService().preload()
-        self.subject_List = SubjectService().preload()
+    # def preload(self, request, params={}):
+    #     self.course_List = CourseService().preload()
+    #     self.subject_List = SubjectService().preload()
 
     def request_to_form(self, requestForm):
-        self.form['id'] = requestForm['id']
-        self.form['examTime'] = requestForm['examTime']
-        self.form['examDate'] = requestForm['examDate']
-        self.form['courseId'] = requestForm['courseId']
-        self.form['subjectId'] = requestForm['subjectId']
-        self.form['semester'] = requestForm['semester']
+        self.form['id'] = requestForm.get('id','')
+        self.form['examTime'] = requestForm.get('examTime','')
+        self.form['examDate'] = requestForm.get('examDate','')
+        self.form['courseId'] = requestForm.get('courseId','')
+        self.form['subjectId'] = requestForm.get('subjectId','')
+        self.form['semester'] = requestForm.get('semester','')
 
         if self.form['courseId'] != '':
             course = CourseService().get(self.form['courseId'])
@@ -151,7 +151,7 @@ class TimeTableCtl(BaseCtl):
         json_request = json.loads(request.body)
         res = {"result": {}, "success": True}
         if (json_request):
-            params["name"] = json_request.get("name", None)
+            params["courseName"] = json_request.get("courseName", None)
             params["pageNo"] = json_request.get("pageNo", None)
         records = self.get_service().search(params)
         if records and records.get("data"):
@@ -185,6 +185,22 @@ class TimeTableCtl(BaseCtl):
         else:
             res["success"] = False
             res["result"]["message"] = "Data was not deleted"
+        return JsonResponse(res)
+
+    def preload(self, request, params={}):
+        res = {"result": {}, "success": True}
+        course_list = CourseService().preload()
+        subject_list = SubjectService().preload()
+        preloadList = []
+        preloadList1 = []
+        for x in course_list:
+            preloadList.append(x.to_json())
+        res["result"]["courseList"] = preloadList
+
+        for x in subject_list:
+            preloadList1.append(x.to_json())
+        res["result"]["subjectList"] = preloadList1
+
         return JsonResponse(res)
 
     def get_service(self):

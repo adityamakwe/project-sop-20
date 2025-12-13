@@ -11,16 +11,16 @@ class UserCtl(BaseCtl):
 
     def request_to_form(self, requestForm):
         self.form["id"] = requestForm["id"]
-        self.form["firstName"] = requestForm["firstName"]
-        self.form["lastName"] = requestForm["lastName"]
-        self.form["loginId"] = requestForm["loginId"]
-        self.form["password"] = requestForm["password"]
-        self.form["confirmPassword"] = requestForm["confirmPassword"]
-        self.form["dob"] = requestForm["dob"]
-        self.form["address"] = requestForm["address"]
-        self.form["gender"] = requestForm["gender"]
-        self.form["mobileNumber"] = requestForm["mobileNumber"]
-        self.form["roleId"] = requestForm["roleId"]
+        self.form["firstName"] = requestForm.get("firstName",'')
+        self.form["lastName"] = requestForm.get("lastName",'')
+        self.form["loginId"] = requestForm.get("loginId",'')
+        self.form["password"] = requestForm.get("password",'')
+        self.form["confirmPassword"] = requestForm.get("confirmPassword",'')
+        self.form["dob"] = requestForm.get("dob",'')
+        self.form["address"] = requestForm.get("address",'')
+        self.form["gender"] = requestForm.get("gender",'')
+        self.form["mobileNumber"] = requestForm.get("mobileNumber",'')
+        self.form["roleId"] = requestForm.get("roleId",'')
         if self.form['roleId'] != '':
             role = RoleService().get(self.form['roleId'])
             self.form["roleName"] = role.name
@@ -156,12 +156,15 @@ class UserCtl(BaseCtl):
         return JsonResponse(res)
 
     def search(self, request, params={}):
+        print('--------------this is search')
         json_request = json.loads(request.body)
         res = {"result": {}, "success": True}
         if (json_request):
             params["firstName"] = json_request.get("firstName", None)
             params["loginId"] = json_request.get("loginId", None)
+            params["roleId"] = json_request.get("roleId", None)
             params["pageNo"] = json_request.get("pageNo", None)
+            print('--------------^^^',params["pageNo"])
         records = self.get_service().search(params)
         if records and records.get("data"):
             res["success"] = True

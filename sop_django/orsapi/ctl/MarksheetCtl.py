@@ -1,9 +1,8 @@
 import json
-
 from django.http import JsonResponse
-
 from .BaseCtl import BaseCtl
 from django.shortcuts import render
+from ..service.StudentService import StudentService
 from ..utility.DataValidator import DataValidator
 from ..models import Marksheet
 from ..service.MarksheetService import MarksheetService
@@ -12,12 +11,12 @@ from ..service.MarksheetService import MarksheetService
 class MarksheetCtl(BaseCtl):
 
     def request_to_form(self, requestForm):
-        self.form['id'] = requestForm['id']
-        self.form['name'] = requestForm['name']
-        self.form['rollNumber'] = requestForm['rollNumber']
-        self.form['physics'] = requestForm['physics']
-        self.form['chemistry'] = requestForm['chemistry']
-        self.form['maths'] = requestForm['maths']
+        self.form['id'] = requestForm.get('id','')
+        self.form['name'] = requestForm.get('name','')
+        self.form['rollNumber'] = requestForm.get('rollNumber','')
+        self.form['physics'] = requestForm.get('physics','')
+        self.form['chemistry'] = requestForm.get('chemistry','')
+        self.form['maths'] = requestForm.get('maths','')
 
     def form_to_model(self, obj):
         pk = int(self.form['id'])
@@ -107,26 +106,26 @@ class MarksheetCtl(BaseCtl):
                     rollNumber=self.form['rollNumber'])
                 if duplicate.count() > 0:
                     res["success"] = False
-                    res["result"]["inputerror"] = "Roll Number already exists"
+                    res["result"]["message"] = "Roll Number already exists"
                     return JsonResponse(res)
                 else:
                     marksheet = self.form_to_model(Marksheet())
                     self.get_service().save(marksheet)
                     self.form['id'] = marksheet.id
                     res["success"] = True
-                    res["result"]["inputerror"] = "Marksheet updated successfully"
+                    res["result"]["message"] = "Marksheet updated successfully"
                     return JsonResponse(res)
             else:
                 duplicate = self.get_service().get_model().objects.filter(rollNumber=self.form['rollNumber'])
                 if duplicate.count() > 0:
                     res["success"] = False
-                    res["result"]["inputerror"] = "Roll Number already exists"
+                    res["result"]["message"] = "Roll Number already exists"
                     return JsonResponse(res)
                 else:
                     marksheet = self.form_to_model(Marksheet())
                     self.get_service().save(marksheet)
                     res["success"] = True
-                    res["result"]["inputerror"] = "Marksheet added successfully"
+                    res["result"]["message"] = "Marksheet added successfully"
         return JsonResponse(res)
 
     def search(self, request, params={}):
@@ -169,6 +168,14 @@ class MarksheetCtl(BaseCtl):
             res["result"]["message"] = "Data was not deleted"
         return JsonResponse(res)
 
+    def preload(self, request, params={}):
+        res = {"result": {}, "success": True}
+        student_list = StudentService().preload()
+        preloadList = []
+        for x in student_list:
+            preloadList.append(x.to_json())
+        res["result"]["studentList"] = preloadList
+        return JsonResponse(res)
 
     def get_service(self):
         return MarksheetService()

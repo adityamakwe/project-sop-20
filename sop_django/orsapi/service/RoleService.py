@@ -7,12 +7,13 @@ from django.db import connection
 class RoleService(BaseService):
 
     def search(self, params):
-        pageNo = (params['pageNo'] - 1) * self.pageSize
+        pageNo = (params['pageNo']) * self.pageSize
         sql = 'select * from sos_role where 1=1'
-        val = params.get('name', None)
+        val = params.get('id', None)
         if (DataValidator.isNotNull(val)):
-            sql += " and name like '" + val + "%%'"
+            sql += " and id = " + val
         sql += " limit %s, %s"
+        print(sql)
         cursor = connection.cursor()
         cursor.execute(sql, [pageNo, self.pageSize])
         result = cursor.fetchall()
