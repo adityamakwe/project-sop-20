@@ -16,8 +16,8 @@
                     <input type="text" name="courseName" [(ngModel)]="form.courseName"
                         placeholder="Enter Course Name">&nbsp;
 
-                    <button>search</button>&nbsp;
-                    <button>reset</button>
+                    <button (click)="search()">search</button>&nbsp;
+                    <button (click)="reset()">reset</button>
                 </td>
             </tr>
         </table>
@@ -52,10 +52,10 @@
 
         <table style="width: 100%">
             <tr>
-                <td style="width: 25%"><button>previous</button></td>
+                <td style="width: 25%"><button (click)="previous()">previous</button></td>
                 <td align="center" style="width: 25%"><button>new</button></td>
                 <td align="center" style="width: 25%"><button>delete</button></td>
-                <td style="width: 25%" align="right"><button>next</button></td>
+                <td style="width: 25%" align="right"><button (click)="next()">next</button></td>
             </tr>
         </table>
     </div>

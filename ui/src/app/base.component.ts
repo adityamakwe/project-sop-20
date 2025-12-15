@@ -34,7 +34,7 @@ export class BaseCtl implements OnInit {
         this.api.get = ep + "/get";
         this.api.save = ep + "/save";
         this.api.search = ep + "/search";
-        this.api.deleteMany = ep + "/delete";
+        this.api.delete = ep + "/delete";
         this.api.preload = ep + "/preload";
     }
 
@@ -98,5 +98,22 @@ export class BaseCtl implements OnInit {
 
     reset() {
         location.reload();
+    }
+
+    delete(id: any) {
+        var _self = this;
+        this.serviceLocator.httpService.post(_self.api.delete + "/" + id, this.form, function (res: any) {
+            _self.form.message = '';
+            _self.form.list = [];
+            if (res.success) {
+                _self.form.error = false;
+                _self.form.message = res.result.message;
+                _self.form.list = res.result.data;
+            } else {
+                _self.form.error = true;
+                _self.form.message = res.result.message;
+            }
+        });
+
     }
 }

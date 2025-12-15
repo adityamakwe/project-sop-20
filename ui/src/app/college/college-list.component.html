@@ -43,7 +43,7 @@
                 <td>{{m.address}}</td>
                 <td>{{m.state}}</td>
                 <td>{{m.city}}</td>
-                <td>{{m.phoneNo}}</td>
+                <td>{{m.phoneNumber}}</td>
                 <td><a>Edit</a></td>
             </tr>
         </table>
@@ -52,10 +52,10 @@
 
         <table style="width: 100%">
             <tr>
-                <td style="width: 25%"><button>previous</button></td>
+                <td style="width: 25%"><button (click)="previous()">previous</button></td>
                 <td align="center" style="width: 25%"><button>new</button></td>
                 <td align="center" style="width: 25%"><button>delete</button></td>
-                <td style="width: 25%" align="right"><button>next</button></td>
+                <td style="width: 25%" align="right"><button (click)="next()">next</button></td>
             </tr>
         </table>
     </div>

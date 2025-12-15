@@ -191,8 +191,11 @@ class UserCtl(BaseCtl):
         res = {"result": {}, "success": True}
         if (user != None):
             self.get_service().delete(params["id"])
+            records = self.get_service().search(params)
+            if records and records.get("data"):
+                res["result"]["data"] = records["data"]
+                res["result"]["lastId"] = User.objects.last().id
             res["success"] = True
-            res["result"]["data"] = user.to_json()
             res["result"]["message"] = "Data has been deleted successfully"
         else:
             res["success"] = False
