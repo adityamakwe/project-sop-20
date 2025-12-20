@@ -41,11 +41,30 @@ export class BaseCtl implements OnInit {
     constructor(public endpoint: String, public serviceLocator: ServiceLocatorService, public route: ActivatedRoute) {
         var _self = this;
         _self.initApi(endpoint); // http://localhost:8000/orsapi/User
+
+        serviceLocator.getPathVariable(route, function (params: any) {
+            _self.form.data.id = params["id"];
+        })
     }
 
 
     ngOnInit(): void {
         this.preload();
+        if (this.form.data.id && this.form.data.id > 0) {
+            this.display();
+        }
+    }
+
+    display() {
+        var _self = this;
+        this.serviceLocator.httpService.get(_self.api.get + "/" + _self.form.data.id, function (res: any) {
+            if (res.success) {
+                _self.form.data = res.result.data;
+            } else {
+                _self.form.error = true;
+                _self.form.message = res.result.message;
+            }
+        });
     }
 
     preload() {
@@ -115,5 +134,8 @@ export class BaseCtl implements OnInit {
             }
         });
 
+    }
+    forward(page: any) {
+        this.serviceLocator.forward(page);
     }
 }

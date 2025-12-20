@@ -30,6 +30,8 @@ import { FacultyListComponent } from './faculty/faculty-list.component';
 import { MarksheetListComponent } from './marksheet/marksheet-list.component';
 import { StudentListComponent } from './student/student-list.component';
 import { TimetableListComponent } from './timetable/timetable-list.component';
+import { ChangepasswordComponent } from './user/changepassword.component';
+import { ForgetpasswordComponent } from './user/forgetpassword.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +59,8 @@ import { TimetableListComponent } from './timetable/timetable-list.component';
     MarksheetListComponent,
     StudentListComponent,
     TimetableListComponent,
+    ChangepasswordComponent,
+    ForgetpasswordComponent,
     
   ],
   imports: [

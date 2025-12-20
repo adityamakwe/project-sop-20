@@ -1,27 +1,26 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpServiceService } from '../http-service.service';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html'
+  selector: 'app-forgotpassword',
+  templateUrl: './forgetpassword.component.html'
 })
-export class LoginComponent {
+export class ForgetpasswordComponent {
 
-  endpoint = "http://localhost:8000/orsapi/Login/auth/";
+  endpoint = "http://localhost:8000/orsapi/ForgetPassword/submit";
 
   form: any = {
     error: false,
     message: '',
-    data: {},
+    data: { id: null },
     inputerror: {},
   };
 
   constructor(private httpService: HttpServiceService, private router: Router) {
   }
 
-  signIn() {
+  submit() {
     var _self = this;
     this.httpService.post(this.endpoint, this.form.data, function (res: any) {
 
@@ -36,22 +35,7 @@ export class LoginComponent {
       if (_self.form.error && res.result.inputerror) {
         _self.form.inputerror = res.result.inputerror;
       }
-
-      if (res.success) {
-        localStorage.setItem("firstName", res.result.data.firstName);
-        localStorage.setItem("roleName", res.result.data.roleName);
-        localStorage.setItem("loginId", res.result.data.loginId);
-        localStorage.setItem("id", res.result.data.id);
-
-        _self.router.navigateByUrl('dashboard');
-        console.log(res.result.data.loginId);
-        // console.log(res.result.data)
-        
-      }
     });
   }
 
-  signUp() {
-    this.router.navigateByUrl('signup');
-  }
 }

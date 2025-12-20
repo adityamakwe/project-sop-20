@@ -1,5 +1,5 @@
 import json
-
+from django.http import JsonResponse
 from .BaseCtl import BaseCtl
 from django.shortcuts import render
 from ..utility.DataValidator import DataValidator
@@ -12,11 +12,11 @@ from ..service.UserService import UserService
 
 class ChangePasswordCtl(BaseCtl):
 
-    def request_to_form(self, requestFrom):
-        self.form['id'] = requestFrom['id']
-        self.form['oldPassword'] = requestFrom['oldPassword']
-        self.form['newPassword'] = requestFrom['newPassword']
-        self.form['confirmPassword'] = requestFrom['confirmPassword']
+    def request_to_form(self, requestForm):
+        self.form['id'] = requestForm['id']
+        self.form['oldPassword'] = requestForm.get("oldPassword",'')
+        self.form['newPassword'] = requestForm.get("newPassword",'')
+        self.form['confirmPassword'] = requestForm.get("confirmPassword",'')
 
     def form_to_model(self, obj):
         pk = int(self.form['id'])
@@ -53,10 +53,6 @@ class ChangePasswordCtl(BaseCtl):
 
         return self.form['error']
 
-    def display(self, request, params={}):
-        res = render(request, self.get_template(), {'form': self.form})
-        return res
-
     def submit(self, request, params={}):
         json_request = json.loads(request.body)
         self.request_to_form(json_request)
@@ -65,34 +61,25 @@ class ChangePasswordCtl(BaseCtl):
             res["success"] = False
             res["result"]["inputerror"] = self.form["inputError"]
         else:
-            user_json = request.session.get('user', None)
-            q = User.objects.filter(loginId=user_json.get('loginId'), password=self.form['oldPassword'])
-            user = q[0]
+            q = User.objects.filter(id=self.form['id'], password=self.form['oldPassword'])
             if q.count() > 0:
                 if self.form['newPassword'] == self.form['confirmPassword']:
-                    emailMessege = EmailMessege()
-                    emailMessege.to = [user.loginId]
-                    emailMessege.subject = "Change Password"
-                    mailResponse = EmailService.send(emailMessege, 'changePassword', user)
-
-                    # if mailResponse == 1:
                     if True:
+                        user = q[0]
                         user.password = self.form['newPassword']
                         user.confirmPassword = self.form['confirmPassword']
-
                         UserService().save(user)
-
                         res["success"] = True
-                        res["result"]["inputerror"] = "your password has been changed successfully, please check your mail..."
+                        res["result"]["message"] = "your password has been changed successfully, please check your mail..."
                     else:
                         res["success"] = False
-                        res["result"]["inputerror"] = "Please Check Your Internet Connection"
+                        res["result"]["message"] = "Please Check Your Internet Connection"
                 else:
                     res["success"] = False
-                    res["result"]["inputerror"] = "Confirm Password are not matched"
+                    res["result"]["message"] = "Confirm Password are not matched"
             else:
                 res["success"] = False
-                res["result"]["inputerror"] = "Old Password is wrong"
+                res["result"]["message"] = "Old Password is wrong"
         return JsonResponse(res)
 
     def get_service(self):

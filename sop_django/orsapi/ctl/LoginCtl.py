@@ -57,5 +57,6 @@ class LoginCtl(BaseCtl):
             else:
                 res["result"]["data"] = user.to_json()
         return JsonResponse(res)
+
     def get_service(self):
         return UserService()

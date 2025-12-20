@@ -12,6 +12,8 @@ from .ctl.MarksheetCtl import MarksheetCtl
 from .ctl.MarksheetMeritListCtl import MarksheetMeritListCtl
 from .ctl.StudentCtl import StudentCtl
 from .ctl.TimeTableCtl import TimeTableCtl
+from .ctl.ChangePasswordCtl import ChangePasswordCtl
+from .ctl.ForgetPasswordCtl import ForgetPasswordCtl
 
 @csrf_exempt
 def action(request, page, action="get", id=0, pageNo=1):

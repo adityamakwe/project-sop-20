@@ -59,7 +59,7 @@
                 <td>{{m.address}}</td>
                 <td>{{m.gender}}</td>
                 <td>{{m.mobileNumber}}</td>
-                <td><a style="cursor: pointer;">Edit</a></td>
+                <td><a (click)="forward( '/user/' +  m.id)" style="cursor: pointer;">Edit</a></td>
             </tr>
         </table>
 
@@ -68,7 +68,7 @@
         <table style="width: 100%">
             <tr>
                 <td style="width: 25%"><button (click)="previous()" [disabled]="form.pageNo == 0">previous</button></td>
-                <td align="center" style="width: 25%"><button>new</button></td>
+                <td align="center" style="width: 25%"><button (click)="forward('/user')">new</button></td>
                 <td align="center" style="width: 25%"><button (click)="delete()">delete</button></td>
                 <td style="width: 25%" align="right"><button (click)="next()" [disabled]="form.nextListSize == 0">next</button></td>
             </tr>

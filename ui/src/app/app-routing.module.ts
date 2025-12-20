@@ -21,6 +21,9 @@ import { FacultyListComponent } from './faculty/faculty-list.component';
 import { MarksheetListComponent } from './marksheet/marksheet-list.component';
 import { StudentListComponent } from './student/student-list.component';
 import { TimetableListComponent } from './timetable/timetable-list.component';
+import { ChangepasswordComponent } from './user/changepassword.component';
+import { ForgetpasswordComponent } from './user/forgetpassword.component';
+
 
 
 const routes: Routes = [
@@ -82,39 +85,82 @@ const routes: Routes = [
     component: UserListComponent
   },
   {
+    path: 'user/:id',
+    component: UserComponent
+  },
+  {
     path: 'rolelist',
-    component:RoleListComponent
+    component: RoleListComponent
+  },
+  {
+    path: 'role/:id',
+    component: RoleComponent
   },
   {
     path: 'collegelist',
     component: CollegeListComponent
   },
   {
+    path: 'college/:id',
+    component: CollegeComponent
+  },
+  {
     path: 'courselist',
     component: CourseListComponent
+  },
+  {
+    path: 'course/:id',
+    component: CourseComponent
   },
   {
     path: 'subjectlist',
     component: SubjectListComponent
   },
   {
+    path: 'subject/:id',
+    component: SubjectComponent
+  },
+  {
     path: 'facultylist',
     component: FacultyListComponent
+  },
+  {
+    path: 'faculty/:id',
+    component: FacultyComponent
   },
   {
     path: 'marksheetlist',
     component: MarksheetListComponent
   },
   {
+    path: 'marksheet/:id',
+    component: MarksheetComponent
+  },
+  {
     path: 'studentlist',
-    component:StudentListComponent
+    component: StudentListComponent
+  },
+  {
+    path: 'student/:id',
+    component: StudentComponent
   },
   {
     path: 'timetablelist',
-    component:TimetableListComponent
+    component: TimetableListComponent
+  },
+  {
+    path: 'timetable/:id',
+    component: TimetableComponent
+  },
+  {
+    path: 'changepassword',
+    component: ChangepasswordComponent
+  },
+  {
+    path: 'forgetpassword',
+    component: ForgetpasswordComponent
   }
-  
-  
+
 ];
 
 @NgModule({
